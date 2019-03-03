@@ -9,7 +9,7 @@ import re
 import sys
 import datetime
 
-systems=["h0"]
+systems=["h0","h1","h3"]
 #systems=["h0","h1","h2","h3"]
 #systems=["h0","h1","h2","h3","h4","h5","h6","h7","h8"]
 ssh_str = "ssh -o StrictHostKeyChecking=no "
@@ -22,8 +22,8 @@ cur_dir = os.getcwd()
 #results directory
 result_dir = cur_dir + '/results/'+ str(now.month) + '_' + str(now.day) +'_' + str(now.hour) + '_' + str(now.minute) 
 
-run_test = False
-configure_system = False
+run_test = True
+configure_system = True
 num_runs = "1"
 
 ############################################################################################################
@@ -111,11 +111,11 @@ for example in examples:
     while not test:
         for system in systems:
             usage = check_utilization(system)
-            if usage < 80:
+            if usage < 70:
                 test = 1
-                print(ssh_str + system + project_id + ' \'' + ' perf stat -r ' + num_runs + ' -o ' + file_name + + hwc + l2flags + llcflags + ' ' + mcvi_dir + example + '/Solver -o ' + mcvi_dir + '/policy' + ' &> output.log &\'')
+                print(ssh_str + system + project_id + ' \'' + ' perf stat -r ' + num_runs + ' -o ' + file_name + hwc + l2flags + llcflags + ' ' + mcvi_dir + example + '/Solver -o ' + mcvi_dir + example + '/policy' + ' &> ' + example + '.log &\'')
                 if run_test:
-                    call(ssh_str + system + project_id + ' \'' + ' perf stat -r ' + num_runs + ' -o ' + file_name +  hwc + l2flags + llcflags + ' ' + mcvi_dir + example + '/Solver -o ' + mcvi_dir _ '/policy' + ' &> output.log &\'',shell=True)
+                    call(ssh_str + system + project_id + ' \'' + ' perf stat -r ' + num_runs + ' -o ' + file_name +  hwc + l2flags + llcflags + ' ' + mcvi_dir + example + '/Solver -o ' + mcvi_dir + example +'/policy' + ' &> ' + example + '.log &\'',shell=True)
                 break
 
 
